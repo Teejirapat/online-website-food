@@ -252,6 +252,7 @@ include 'includes/connect.php';
                       <tr>
                         <th data-field="id">Name</th>
                         <th data-field="name">Item Price/Piece</th>
+                        <th data-field="image">Category</th>
                         <th data-field="image">Image</th>
                       </tr>
                     </thead>
