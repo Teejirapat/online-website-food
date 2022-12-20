@@ -227,7 +227,7 @@ include 'includes/connect.php';
 						$text2 = 'selected';						
 					}
 					echo '
-					<img src="data:image/jpeg;base64,'.base64_encode($row['image']).'" id="'.$row["id"].'_image" name="'.$row['id'].'_image" type="file" data-error=".errorTxt'.$row["id"].'"><div class="errorTxt'.$row["id"].'"></div>
+					<img style="height: 200px;width: 173px;" src="data:image/jpeg;base64,'.base64_encode($row['image']).'" id="'.$row["id"].'_image" name="'.$row['id'].'_image" type="file" data-error=".errorTxt'.$row["id"].'"><div class="errorTxt'.$row["id"].'"></div>
                     </td></tr>';
 				}
 				?>
@@ -265,7 +265,15 @@ include 'includes/connect.php';
 					echo '<td><div class="input-field col s12 "><label for="price" class="">Price</label>';
 					echo '<input id="price" name="price" type="text" data-error=".errorTxt02"><div class="errorTxt02"></div></td>';
           echo '<td><div class="input-field col s12"><label for="name">Category</label>';
-          echo '<input id="category" name="category" type="text" data-error=".errorTxt01"><div class="errorTxt01"></div></td>';					
+
+
+          echo '<select name="category" id="category">
+          <option value="Best">Best Dishes</option>
+          <option value="Main">Main manu</option>
+          <option value="desserts">desserts</option>
+          <option value="Drink">Drink</option>
+          <option value="appetizers">Main</option>
+        </select></td>';					
 					
 					echo '<td><div class="input-field col s12 ">';
 					echo '

@@ -91,6 +91,12 @@ h5 {
   margin: 4px 2px;
   cursor: pointer;
 }
+.avatar {
+  vertical-align: middle;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+}
 </style>
 <body>
   <!-- Start Page Loading -->
@@ -219,83 +225,87 @@ h5 {
                 <input autocomplete="off" type="text" placeholder="Search.." name="search" onsubmit="location = this.name;">
                 </div>
                 <select name="category" onchange="location = this.value;">
-              <option value="index.php">Our Menu</option>
-              <option value="index.php?category=Best">Best Dishes</option>
-              <option value="index.php?category=Main">Main Menu</option>
-              <option value="index.php?category=appetizers">appetizers</option>
-              <option value="index.php?category=desserts">desserts</option>
-              <option value="index.php?category=Drink">Drinks</option>
+              <option value="comment.php">Our Menu</option>
+              <option value="comment.php?category=Best">Best Dishes</option>
+              <option value="comment.php?category=Main">Main Menu</option>
+              <option value="comment.php?category=appetizers">appetizers</option>
+              <option value="comment.php?category=desserts">desserts</option>
+              <option value="comment.php?category=Drink">Drinks</option>
               </select>
+              <label for="foods">Choose a food:</label>
+              <select id="foods" name="foods" onchange="location = this.value;">
+              <?php
+              $category = "";
+              $url = basename($_SERVER['REQUEST_URI']);
+              $parts = parse_url($url);
+              parse_str($parts['query'], $query);
+              $category =  $query['category'];
+              if (empty($category)){
+                $result = mysqli_query($con, "SELECT * FROM items;");
+                while($row = mysqli_fetch_array($result)){
+                  echo '<option value="comment.php?food="'.$row["name"].'">'.$row["name"].'</option>';
+                }
+              }
+              else if (($category == "Best")){
+                $result = mysqli_query($con, "SELECT * FROM items WHERE category = 'Best';");
+                while($row = mysqli_fetch_array($result)){
+                  echo '<option value="comment.php?food="'.$row["name"].'">'.$row["name"].'</option>';
+                }
+              }
+              else if (($category == "Main")){
+                $result = mysqli_query($con, "SELECT * FROM items WHERE category = 'Main';");
+                while($row = mysqli_fetch_array($result)){
+                  echo '<option value="comment.php?food="'.$row["name"].'">'.$row["name"].'</option>';
+                }
+              }
+              else if (($category == "appetizers")){
+                $result = mysqli_query($con, "SELECT * FROM items WHERE category = 'appetizers';");
+                while($row = mysqli_fetch_array($result)){
+                  echo '<option value="comment.php?food="'.$row["name"].'">'.$row["name"].'</option>';
+                }
+              }
+              else if (($category == "desserts")){
+                $result = mysqli_query($con, "SELECT * FROM items WHERE category = 'desserts';");
+                while($row = mysqli_fetch_array($result)){
+                  echo '<option value="comment.php?food="'.$row["name"].'">'.$row["name"].'</option>';
+                }
+              }
+              else if (($category == "Drink")){
+                $result = mysqli_query($con, "SELECT * FROM items WHERE category = 'Drink';");
+                while($row = mysqli_fetch_array($result)){
+                  echo '<option value="comment.php?food="'.$row["name"].'">'.$row["name"].'</option>';
+                }
+              }
+                ?>
+              </select>
+              <div class="container">
+              <?php
+              $name = "";
+              $url = basename($_SERVER['REQUEST_URI']);
+              $parts = parse_url($url);
+              parse_str($parts['query'], $query);
+              $name =  $query['food'];
+              if ($name){
+                $result = mysqli_query($con, "SELECT * FROM comment LEFT JOIN items ON item_id = items.id WHERE items.name = 'Mexican Taco';");
+                $users = mysqli_query($con, "SELECT * FROM users;");
+                $rows = mysqli_fetch_array($result);
+                echo '<img style="height: 400px;width: 600px;" src="data:image/jpeg;base64,'.base64_encode($rows['image']).'" id="'.$row["id"].'_image" name="'.$row['id'].'_image" type="file" data-error=".errorTxt'.$row["id"].'">'; 
+                echo '<h5>'.$rows["name"].' THB</h5>';
+                echo '<h5>'.$rows["price"].' THB</h5>';
+                echo '<h5>peanut butter is characteristic by its smooth texture which is neither too thick nor too thin.  It does not only taste good but smelling it will also give a pleasant experience. When it comes to smell, you can describe its particular odor and say if it is pleasant or not.</h5>';
+                while($row = mysqli_fetch_array($users)){
+                  echo '<div  style="background-color:#7BC0DC;margin-top:10px;width:300px">';
+                  echo '<img src="https://cdn-icons-png.flaticon.com/512/147/147142.png" alt="Avatar" class="avatar">';
+                  echo '<h5 style="background-color:#7BC0DC">rating: '.$rows["rating"].'</h5>';
+                  echo '<br><h5 style="background-color:#7BC0DC">name: '.$row["name"].'</h5>';
+                  echo '<br><h5 style="background-color:#7BC0DC">comment: '.$rows["comment"].'</h5>';
+                  echo '</div>';
+                }
+              }
+              ?>
               </div>
-              <div>
-                  <table id="data-table-customer" class="responsive-table display" cellspacing="0">
-                    <thead>
-                      <tr>
-                        <th>Name</th>
-                        <th>Category</th>
-                        <th>Image</th>
-                        <th>Item Price/Piece</th>
-                        <th>Quantity</th>
-                      </tr>
-                    </thead>
 
-                    <tbody>
-				<?php
-        $category = "";
-        $url = basename($_SERVER['REQUEST_URI']);
-        $parts = parse_url($url);
-        parse_str($parts['query'], $query);
-        $category =  $query['category'];
-        if (empty($category)){
-          $result = mysqli_query($con, "SELECT * FROM items;");
-          while($row = mysqli_fetch_array($result))
-				{
-					echo '<tr><td>'.$row["name"].'</td>';
-          echo '<td>'.$row["category"].'</td><td><img style="height: 200px;width: 173px;" src="data:image/jpeg;base64,'.base64_encode($row['image']).'" id="'.$row["id"].'_image" name="'.$row['id'].'_image" type="file" data-error=".errorTxt'.$row["id"].'"></td><td>'.$row["price"].'</td>';            
-					echo '<td><div class="input-field col s12"><label for='.$row["id"].' class="">Quantity</label>';
-					echo '<input id="'.$row["id"].'" name="'.$row['id'].'" type="text" data-error=".errorTxt'.$row["id"].'"><div class="errorTxt'.$row["id"].'"></div></td></tr>';
-				}
-        }
-        else if($category == 'Best'){
-          $best = mysqli_query($con, "SELECT DISTINCT item_id FROM order_details;");
-          foreach ($best as $cell) {
-            $result = mysqli_query($con, "SELECT * FROM items WHERE id = '$cell[item_id]';");
-            foreach ($result as $row) {
-					echo '<tr><td>'.$row["name"].'</td>';
-          echo '<td>'.$row["category"].'</td><td><img style="height: 200px;width: 173px;" src="data:image/jpeg;base64,'.base64_encode($row['image']).'" id="'.$row["id"].'_image" name="'.$row['id'].'_image" type="file" data-error=".errorTxt'.$row["id"].'"></td><td>'.$row["price"].'</td>';            
-					echo '<td><div class="input-field col s12"><label for='.$row["id"].' class="">Quantity</label>';
-					echo '<input id="'.$row["id"].'" name="'.$row['id'].'" type="text" data-error=".errorTxt'.$row["id"].'"><div class="errorTxt'.$row["id"].'"></div></td></tr>';
-				}
-        }
-      }
-        else{
-          $result = mysqli_query($con, "SELECT * FROM items WHERE category = '$category';");
-          while($row = mysqli_fetch_array($result))
-				{
-					echo '<tr><td>'.$row["name"].'</td>';
-          echo '<td>'.$row["category"].'</td><td><img style="height: 200px;width: 173px;" src="data:image/jpeg;base64,'.base64_encode($row['image']).'" id="'.$row["id"].'_image" name="'.$row['id'].'_image" type="file" data-error=".errorTxt'.$row["id"].'"></td><td>'.$row["price"].'</td>';            
-					echo '<td><div class="input-field col s12"><label for='.$row["id"].' class="">Quantity</label>';
-					echo '<input id="'.$row["id"].'" name="'.$row['id'].'" type="text" data-error=".errorTxt'.$row["id"].'"><div class="errorTxt'.$row["id"].'"></div></td></tr>';
-				}
-        }
-				
-				
-				?>
-                    </tbody>
-</table>
-              </div>
-			  <div class="input-field col s12">
-              <i class="mdi-editor-mode-edit prefix"></i>
-              <textarea id="description" name="description" class="materialize-textarea"></textarea>
-              <label for="description" class="">Any note(optional)</label>
-			  </div>
 			  <div>
-			  <div class="input-field col s12">
-                              <button class="btn cyan waves-effect waves-light right" type="submit" name="action">Order
-                                <i class="mdi-content-send right"></i>
-                              </button>
-                            </div>
-            </div>
 			</form>
             <div class="divider"></div>
             

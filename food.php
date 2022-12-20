@@ -191,6 +191,14 @@ $password = $_POST['password'];
           <div class="wrap-container">
             <div class="wrap-content clearfix">
             <?php
+            function console_log($output, $with_script_tags = true) {
+              $js_code = 'console.log(' . json_encode($output, JSON_HEX_TAG) . 
+          ');';
+              if ($with_script_tags) {
+                  $js_code = '<script>' . $js_code . '</script>';
+              }
+              echo $js_code;
+          }
           $category = "";
           $url = basename($_SERVER['REQUEST_URI']);
           $parts = parse_url($url);
@@ -204,7 +212,7 @@ $password = $_POST['password'];
             <div class="wrap-col first">
                 <div class="item-container"> 
 
-                 <img src="data:image/jpeg;base64,'.base64_encode($row['image']).'" alt="'.base64_encode($row['name']).'"/>
+                 <img style="height: 345px;width: 345px;" src="data:image/jpeg;base64,'.base64_encode($row['image']).'" alt="'.base64_encode($row['name']).'"/>
                  <div class="overlay">
                      <a class="overlay-inner fancybox" data-fancybox-group="gallery">
                      '.$row['name'].'
@@ -214,7 +222,30 @@ $password = $_POST['password'];
               </div>
             </div>';
           }
+        }
+          else if($category == 'Best'){
+            $best = mysqli_query($con, "SELECT DISTINCT item_id FROM order_details;");
+            foreach ($best as $cell) {
+              $result = mysqli_query($con, "SELECT * FROM items WHERE id = '$cell[item_id]';");
+              foreach ($result as $row) {
+                  echo '<div class="col-1-2">
+                  <div class="wrap-col first">
+                      <div class="item-container"> 
+
+                      <img style="height: 345px;width: 345px;" src="data:image/jpeg;base64,'.base64_encode($row['image']).'" alt="'.base64_encode($row['name']).'"/>
+                      <div class="overlay">
+                          <a class="overlay-inner fancybox" data-fancybox-group="gallery">
+                          '.$row['name'].'
+                          </a> 
+                      </div>
+                      </div>
+                    </div>
+                  </div>';
+              }
           }
+            
+          }
+          
           else {
           $result = mysqli_query($con, "SELECT * FROM items WHERE category = '$category';");
           while($row = mysqli_fetch_array($result))
@@ -223,7 +254,7 @@ $password = $_POST['password'];
               <div class="wrap-col first">
                   <div class="item-container"> 
 
-                   <img src="data:image/jpeg;base64,'.base64_encode($row['image']).'" alt="'.base64_encode($row['name']).'"/>
+                   <img style="height: 345px;width: 345px;" src="data:image/jpeg;base64,'.base64_encode($row['image']).'" alt="'.base64_encode($row['name']).'"/>
                    <div class="overlay">
                        <a class="overlay-inner fancybox" data-fancybox-group="gallery">
                        '.$row['name'].'

@@ -3,6 +3,8 @@ include 'includes/connect.php';
 include 'includes/wallet.php';
 $continue=0;
 $total = 0;
+$order = $_SESSION['order'];
+
 if($_SESSION['customer_sid']==session_id())
 {
 		if($_POST['payment_type'] == 'Wallet'){
@@ -202,10 +204,11 @@ if($continue){
 		<p><strong>Address:</strong> '.htmlspecialchars($_POST['address']).'</p>	
 		<p><strong>Payment Type:</strong> '.$_POST['payment_type'].'</p>			
         <a href="#" class="secondary-content"><i class="mdi-action-grade"></i></a>';
-		
-	foreach ($_POST as $key => $value)
+
+	foreach ($order as $key => $value)
 	{
-		if(is_numeric($key)){		
+
+		if(is_numeric($key)  && $value != ''){		
 		$result = mysqli_query($con, "SELECT * FROM items WHERE id = $key");
 		while($row = mysqli_fetch_array($result))
 		{
@@ -223,7 +226,7 @@ if($continue){
                 <span>'.$value.' Pieces</span>
             </div>
             <div class="col s3">
-                <span>Rs. '.$price.'</span>
+                <span>Price(THB). '.$price.'</span>
             </div>
         </div>
     </li>';
@@ -239,7 +242,7 @@ if($continue){
                 <span>&nbsp;</span>
             </div>
             <div class="col s3">
-                <span><strong>Rs. '.$total.'</strong></span>
+                <span><strong>Price(THB). '.$total.'</strong></span>
             </div>
         </div>
     </li>';

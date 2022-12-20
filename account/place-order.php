@@ -2,6 +2,7 @@
 include 'includes/connect.php';
 include 'includes/wallet.php';
 $total = 0;
+$_SESSION['order'] = $_POST;
 	if($_SESSION['customer_sid']==session_id())
 	{
 $result = mysqli_query($con, "SELECT * FROM users where id = $user_id");
@@ -224,7 +225,7 @@ $verified = $row['verified'];
 							<label for="payment_type">Payment Type</label><br><br>
 							<select id="payment_type" name="payment_type">
 									<option value="Wallet" selected>Wallet</option>
-									<option value="Cash On Delivery" <?php if(!$verified) echo 'disabled';?>>Cash on Delivery</option>							
+									<option value="Cash On Delivery" <?php if(!$verified) echo 'enabled';?>>Cash on Delivery</option>							
 							</select>
                         </div>
                       </div>					
@@ -262,6 +263,7 @@ $verified = $row['verified'];
                         </div>
                       </div>
 					  <?php
+            //function check
 					  	foreach ($_POST as $key => $value)
 						{
 							if($key == 'action' || $value == ''){
@@ -295,13 +297,13 @@ $verified = $row['verified'];
         <p><strong>Name:</strong>'.$name.'</p>
 		<p><strong>Contact Number:</strong> '.$contact.'</p>
         <a href="#" class="secondary-content"><i class="mdi-action-grade"></i></a>';
-		
+      
 	foreach ($_POST as $key => $value)
 	{
-		if($value == ''){
+		if($key == 'action'){
 			break;
 		}
-		if(is_numeric($key)){
+		if(is_numeric($key) && $value != ''){
 		$result = mysqli_query($con, "SELECT * FROM items WHERE id = $key");
 		while($row = mysqli_fetch_array($result))
 		{
@@ -319,7 +321,7 @@ $verified = $row['verified'];
                 <span>'.$value.' Pieces</span>
             </div>
             <div class="col s3">
-                <span>Rs. '.$price.'</span>
+                <span>Price(THB). '.$price.'</span>
             </div>
         </div>
     </li>';
@@ -335,7 +337,7 @@ $verified = $row['verified'];
                 <span>&nbsp;</span>
             </div>
             <div class="col s3">
-                <span><strong>Rs. '.$total.'</strong></span>
+                <span><strong>Price(THB) '.$total.'</strong></span>
             </div>
         </div>
     </li>';
